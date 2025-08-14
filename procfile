@@ -1,0 +1,1 @@
+web: gunicorn urlshort.wsgi:application --bind 0.0.0.0:$PORT
