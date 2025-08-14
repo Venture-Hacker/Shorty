@@ -1,0 +1,69 @@
+{% extends "shorty/base.html" %}
+{% load static %}
+
+{% block title %}Create Short Link{% endblock %}
+
+{% block content %}
+<h1 class="heading">Shorten Your Loooong Links :)</h1>
+<p class="desc">Shorty is an efficient and easy-to-use URL shortening service that streamlines your online experience.</p>
+
+<form method="post" novalidate class="short-form">
+    {% csrf_token %}
+
+    <!-- Long URL Field -->
+    <div class="input__container">
+        <i class="ri-links-line"></i>
+        {{ form.original_url }}
+        <button class="shortBtn">Shorten Now!</button>
+    </div>
+    {% for e in form.original_url.errors %}
+        <div class="text-danger small">{{ e }}</div>
+    {% endfor %}
+
+    <!-- Expiration Date -->
+    <div class="form-group mt-3">
+        <label class="form-label text-light">Expires at (optional)</label>
+        {{ form.expires_at }}
+        {% for e in form.expires_at.errors %}
+            <div class="text-danger small">{{ e }}</div>
+        {% endfor %}
+    </div>
+</form>
+
+<!-- Recent Links -->
+<div class="recent-links">
+    <h3 style="margin-top:2rem;">Recent Links</h3>
+    <table class="table table-dark table-hover table-bordered align-middle">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Destination</th>
+                <th>Clicks</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for l in links %}
+            <tr>
+                <td><a href="{% url 'shorty:detail' l.code %}" class="text-info">{{ l.code }}</a></td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <a href="{{ l.original_url }}" target="_blank" class="text-light">{{ l.original_url }}</a>
+                </td>
+                <td>{{ l.clicks }}</td>
+                <td>
+                    {% if l.is_expired %}
+                        <span class="badge bg-secondary">Expired</span>
+                    {% else %}
+                        <span class="badge bg-success">Active</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-muted">No links yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

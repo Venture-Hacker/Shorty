@@ -1,0 +1,123 @@
+{% extends "shorty/base.html" %}
+{% load static %}
+
+{% block title %}Your Short Link{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    
+    <!-- Short URL Display -->
+    <div class="result__container stable-box">
+        <input type="text" value="{{ short_url }}" id="shortUrlInput" readonly>
+        <i class="ri-clipboard-line copy-icon" onclick="copyText('{{ short_url }}')"></i>
+    </div>
+
+    <!-- Link Details -->
+    <div class="link-info">
+        <p><strong>Destination:</strong> <a href="{{ link.original_url }}" target="_blank" rel="noopener">{{ link.original_url }}</a></p>
+        <p><strong>Clicks:</strong> {{ link.clicks }}</p>
+        <p><strong>Expires:</strong> {% if link.expires_at %}{{ link.expires_at }}{% else %}<em>Never</em>{% endif %}</p>
+    </div>
+
+    <!-- Action Button -->
+    <div class="action-btn">
+        <a href="{% url 'shorty:home' %}" class="shortBtn">Create Another Link</a>
+    </div>
+
+</div>
+
+<style>
+.detail-container {
+    max-width: 700px;
+    margin: auto;
+    padding: 2rem;
+    color: #fff;
+    background: #0b101b;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Short URL Box */
+.result__container.stable-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border: 2px solid #353c4a;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.result__container.stable-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.copy-icon {
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: #1cdce8;
+    transition: color 0.2s ease-in-out;
+}
+
+.copy-icon:hover {
+    color: #bb77ed;
+}
+
+/* Info Section */
+.link-info p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #c9ced6;
+}
+
+.link-info a {
+    color: #1cdce8;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.link-info a:hover {
+    text-decoration: underline;
+}
+
+/* Button Styling */
+.action-btn {
+    margin-top: 1.5rem;
+}
+
+.shortBtn {
+    display: inline-block;
+    background-image: linear-gradient(120deg, #1cdce8, #bb77ed, #f34a62);
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-size 0.3s ease-in-out;
+    background-size: 200%;
+}
+
+.shortBtn:hover {
+    background-position: right center;
+}
+</style>
+
+<script>
+function copyText(txt) {
+    navigator.clipboard.writeText(txt).then(() => {
+        alert("Copied to clipboard!");
+    });
+}
+</script>
+{% endblock %}
